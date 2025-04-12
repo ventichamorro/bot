@@ -1,0 +1,9 @@
+services:
+  - type: web
+    name: superbot-telegram
+    runtime: php
+    buildCommand: ""
+    startCommand: "php -S 0.0.0.0:${PORT} superbot.php"
+    envVars:
+      - key: APP_ENV
+        value: production
