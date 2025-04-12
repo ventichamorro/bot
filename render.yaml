@@ -1,5 +1,8 @@
 services:
   - type: web
-    name: superbot-telegram
+    name: bottelaiep-bot
     runtime: php
     startCommand: "php -S 0.0.0.0:${PORT} superbot.php"
+    envVars:
+      - key: TELEGRAM_TOKEN
+        value: 7470738316:AAGP8HJmV1KUbRdqw1SFB9L0lGhab-JTpMs
