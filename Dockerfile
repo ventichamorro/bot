@@ -2,8 +2,8 @@ FROM php:8.2-apache
 COPY superbot.php /var/www/html/
 COPY php.ini /usr/local/etc/php/conf.d/
 
-# Configuración crítica
-RUN echo "max_execution_time = 300" >> /usr/local/etc/php/conf.d/php.ini
+# Configuración óptima para Render
+RUN echo "max_execution_time = 120" >> /usr/local/etc/php/conf.d/php.ini
 RUN echo "memory_limit = 128M" >> /usr/local/etc/php/conf.d/php.ini
 
 EXPOSE 80
