@@ -1,4 +1,16 @@
 <?php
+// Registra todas las solicitudes entrantes
+file_put_contents('telegram.log', print_r($_SERVER, true)."\n\n".file_get_contents('php://input'), FILE_APPEND);
+
+$token = '7470738316:AAGP8HJmV1KUbRdqw1SFB9L0lGhab-JTpMs';
+$update = json_decode(file_get_contents('php://input'), true);
+
+if (!$update) {
+    // Respuesta para pings de Render
+    echo "Bot activo. Esperando datos de Telegram...";
+    exit;
+}
+
 $token = '7470738316:AAGP8HJmV1KUbRdqw1SFB9L0lGhab-JTpMs';
 $update = json_decode(file_get_contents('php://input'), true);
 
