@@ -1,7 +1,9 @@
 services:
   - type: web
     name: bottelaiep-bot
-    dockerfilePath: ./Dockerfile  # Ruta al Dockerfile
+    runtime: docker
+    dockerfilePath: ./Dockerfile
     envVars:
       - key: TELEGRAM_TOKEN
         value: 7470738316:AAGP8HJmV1KUbRdqw1SFB9L0lGhab-JTpMs
+    healthCheckPath: /superbot.php
