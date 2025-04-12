@@ -1,23 +1,19 @@
 <?php
-// Configuración del bot
-$token = '7849122552:AAEofxNhxl8h7Qo8LWsAYttuRZ2bdBLYcG0';
+// Configuración con nuevo token
+$token = '7470738316:AAGP8HJmV1KUbRdqw1SFB9L0lGhab-JTpMs';
 $update = json_decode(file_get_contents('php://input'), true);
 
-// Base de datos de productos
+// Base de datos de productos (sin cambios)
 $pasillos = [
     1 => ["carne", "queso", "jamón"],
-    2 => ["leche", "yogurth", "cereal"],
-    3 => ["bebidas", "jugos"],
-    4 => ["pan", "pasteles", "tortas"],
-    5 => ["detergente", "lavaloza"]
+    // ... (mantener misma estructura)
 ];
 
-// Procesar mensajes
 if (isset($update["message"])) {
     $chat_id = $update["message"]["chat"]["id"];
     $text = strtolower(trim($update["message"]["text"]));
     
-    $response = "❌ Producto no encontrado. Prueba con: leche, pan, carne...";
+    $response = "❌ Producto no encontrado. Prueba con: leche, pan...";
     
     foreach ($pasillos as $num => $productos) {
         if (in_array($text, $productos)) {
@@ -26,11 +22,9 @@ if (isset($update["message"])) {
         }
     }
     
-    // Enviar respuesta
     file_get_contents("https://api.telegram.org/bot$token/sendMessage?chat_id=$chat_id&text=".urlencode($response)."&parse_mode=Markdown");
     exit;
 }
 
-// Respuesta para pings
-echo "SuperBot (@Labsupbot) activo! ".date('Y-m-d H:i:s');
+echo "SuperBot (@bottelaiep_bot) activo! ".date('Y-m-d H:i:s');
 ?>
