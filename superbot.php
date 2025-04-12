@@ -1,8 +1,8 @@
 <?php
-// Registro de logs para diagnóstico
+// Registro de solicitudes para depuración
 file_put_contents('requests.log', date('Y-m-d H:i:s')." - ".file_get_contents('php://input')."\n", FILE_APPEND);
 
-$token = '7470738316:AAGP8HJmV1KUbRdqw1SFB9L0lGhab-JTpMs';
+$token = '7733844661:AAHk33WFeLAy5zT4NayupGXx3yecXIcSGZY';
 $update = json_decode(file_get_contents('php://input'), true);
 
 // Base de datos de pasillos
@@ -27,11 +27,11 @@ if ($update && isset($update["message"])) {
         }
     }
     
-    header('Content-Type: application/json');
-    echo json_encode(['method' => 'sendMessage', 'text' => $response]);
+    // Enviar respuesta
+    file_get_contents("https://api.telegram.org/bot$token/sendMessage?chat_id=$chat_id&text=".urlencode($response)."&parse_mode=Markdown");
     exit;
 }
 
-// Respuesta para pings de Render/Telegram
-echo "🤖 @bottelaiep_bot activo | ".date('Y-m-d H:i:s');
+// Respuesta para pings
+echo "🤖 @botnuevotelegramaiep3_bot activo | ".date('Y-m-d H:i:s');
 ?>

@@ -1,9 +1,9 @@
 services:
   - type: web
-    name: bottelaiep-bot
+    name: botnuevotelegramaiep3-bot
     runtime: docker
     dockerfilePath: ./Dockerfile
     envVars:
       - key: TELEGRAM_TOKEN
-        value: 7470738316:AAGP8HJmV1KUbRdqw1SFB9L0lGhab-JTpMs
+        value: 7733844661:AAHk33WFeLAy5zT4NayupGXx3yecXIcSGZY
     healthCheckPath: /superbot.php
