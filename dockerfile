@@ -1,25 +1,28 @@
+# Usa la imagen oficial de PHP con Apache
 FROM php:8.2-apache
 
-# Instalar dependencias para debugging
-RUN apt-get update && apt-get install -y \
-    nano \
+# Instala dependencias y configura Apache
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Copiar archivos
+# Habilita mod_rewrite para URL amigables
+RUN a2enmod rewrite
+
+# Configura el virtualhost
+COPY apache-config.conf /etc/apache2/sites-available/000-default.conf
+
+# Copia los archivos de la aplicación
 COPY superbot.php /var/www/html/
-COPY php.ini /usr/local/etc/php/conf.d/
+COPY .htaccess /var/www/html/
 
-# Permisos de escritura para logs
-RUN touch /var/www/html/debug.log && \
-    touch /var/www/html/error.log && \
-    chmod 666 /var/www/html/*.log
+# Establece permisos
+RUN chown -R www-data:www-data /var/www/html && \
+    chmod -R 755 /var/www/html
 
-# Configuración PHP
-RUN echo "max_execution_time = 300" >> /usr/local/etc/php/conf.d/php.ini && \
-    echo "memory_limit = 256M" >> /usr/local/etc/php/conf.d/php.ini && \
-    echo "display_errors = On" >> /usr/local/etc/php/conf.d/php.ini && \
-    echo "log_errors = On" >> /usr/local/etc/php/conf.d/php.ini
-
+# Puerto expuesto
 EXPOSE 80
-CMD ["php", "-S", "0.0.0.0:80", "-t", "/var/www/html"]
+
+# Comando de inicio
+CMD ["apache2-foreground"]

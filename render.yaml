@@ -7,3 +7,4 @@ services:
       - key: TELEGRAM_TOKEN
         value: 7733844661:AAHk33WFeLAy5zT4NayupGXx3yecXIcSGZY
     healthCheckPath: /superbot.php
+    autoDeploy: true
