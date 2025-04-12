@@ -1,9 +1,22 @@
 <?php
-// Registro de solicitudes para depuración
-file_put_contents('requests.log', date('Y-m-d H:i:s')." - ".file_get_contents('php://input')."\n", FILE_APPEND);
+// Debug: Registrar todas las solicitudes
+file_put_contents('debug.log', "=== NEW REQUEST ===\n".date('Y-m-d H:i:s')."\nHeaders:\n".print_r(getallheaders(), true)."\nBody:\n".file_get_contents('php://input')."\n\n", FILE_APPEND);
 
 $token = '7733844661:AAHk33WFeLAy5zT4NayupGXx3yecXIcSGZY';
+
+// Respuesta inmediata para health checks
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    echo "🤖 @botnuevotelegramaiep3_bot operativo | ".date('Y-m-d H:i:s');
+    exit;
+}
+
 $update = json_decode(file_get_contents('php://input'), true);
+
+if (!$update) {
+    file_put_contents('error.log', "Datos no recibidos de Telegram\n", FILE_APPEND);
+    header('HTTP/1.1 400 Bad Request');
+    exit;
+}
 
 // Base de datos de pasillos
 $pasillos = [
@@ -14,7 +27,7 @@ $pasillos = [
     5 => ["detergente", "lavaloza"]
 ];
 
-if ($update && isset($update["message"])) {
+if (isset($update["message"])) {
     $chat_id = $update["message"]["chat"]["id"];
     $text = strtolower(trim($update["message"]["text"]));
     
@@ -28,10 +41,25 @@ if ($update && isset($update["message"])) {
     }
     
     // Enviar respuesta
-    file_get_contents("https://api.telegram.org/bot$token/sendMessage?chat_id=$chat_id&text=".urlencode($response)."&parse_mode=Markdown");
+    $url = "https://api.telegram.org/bot$token/sendMessage";
+    $data = ['chat_id' => $chat_id, 'text' => $response, 'parse_mode' => 'Markdown'];
+    
+    file_put_contents('response.log', "Enviando a Telegram: ".print_r($data, true)."\n", FILE_APPEND);
+    
+    $options = [
+        'http' => [
+            'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+            'method'  => 'POST',
+            'content' => http_build_query($data)
+        ]
+    ];
+    
+    $context = stream_context_create($options);
+    $result = file_get_contents($url, false, $context);
+    
+    echo "Mensaje enviado a Telegram";
     exit;
 }
 
-// Respuesta para pings
-echo "🤖 @botnuevotelegramaiep3_bot activo | ".date('Y-m-d H:i:s');
+echo "Esperando comandos válidos de Telegram";
 ?>
