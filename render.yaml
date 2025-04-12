@@ -1,8 +1,7 @@
 services:
   - type: web
     name: bottelaiep-bot
-    runtime: php
-    startCommand: "php -S 0.0.0.0:${PORT} superbot.php"
+    dockerfilePath: ./Dockerfile  # Ruta al Dockerfile
     envVars:
       - key: TELEGRAM_TOKEN
         value: 7470738316:AAGP8HJmV1KUbRdqw1SFB9L0lGhab-JTpMs
