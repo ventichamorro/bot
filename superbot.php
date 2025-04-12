@@ -1,30 +1,36 @@
 <?php
-$token = getenv('TELEGRAM_TOKEN') ?: '7849122552:AAEofxNhxl8h7Qo8LWsAYttuRZ2bdBLYcG0';
+// Configuración del bot
+$token = '7849122552:AAEofxNhxl8h7Qo8LWsAYttuRZ2bdBLYcG0';
 $update = json_decode(file_get_contents('php://input'), true);
 
-// Respuesta a Telegram
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $pasillos = [
-        1 => ["carne", "queso", "jamón"],
-        2 => ["leche", "yogurth", "cereal"],
-        // ... (agrega el resto de tus pasillos)
-    ];
+// Base de datos de productos
+$pasillos = [
+    1 => ["carne", "queso", "jamón"],
+    2 => ["leche", "yogurth", "cereal"],
+    3 => ["bebidas", "jugos"],
+    4 => ["pan", "pasteles", "tortas"],
+    5 => ["detergente", "lavaloza"]
+];
+
+// Procesar mensajes
+if (isset($update["message"])) {
+    $chat_id = $update["message"]["chat"]["id"];
+    $text = strtolower(trim($update["message"]["text"]));
     
-    $text = strtolower(trim($update['message']['text']));
-    $response = "❌ Producto no encontrado";
+    $response = "❌ Producto no encontrado. Prueba con: leche, pan, carne...";
     
     foreach ($pasillos as $num => $productos) {
         if (in_array($text, $productos)) {
-            $response = "📍 $text → Pasillo $num";
+            $response = "📍 *$text* está en el *Pasillo $num*";
             break;
         }
     }
     
-    header('Content-Type: application/json');
-    echo json_encode(['method' => 'sendMessage', 'text' => $response]);
+    // Enviar respuesta
+    file_get_contents("https://api.telegram.org/bot$token/sendMessage?chat_id=$chat_id&text=".urlencode($response)."&parse_mode=Markdown");
     exit;
 }
 
-// Respuesta para pings del servidor
-echo "Bot activo! " . date('Y-m-d H:i:s');
+// Respuesta para pings
+echo "SuperBot (@Labsupbot) activo! ".date('Y-m-d H:i:s');
 ?>
