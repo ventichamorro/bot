@@ -1,19 +1,20 @@
 <?php
-// Configuración con nuevo token
 $token = '7470738316:AAGP8HJmV1KUbRdqw1SFB9L0lGhab-JTpMs';
 $update = json_decode(file_get_contents('php://input'), true);
 
-// Base de datos de productos (sin cambios)
 $pasillos = [
     1 => ["carne", "queso", "jamón"],
-    // ... (mantener misma estructura)
+    2 => ["leche", "yogurth", "cereal"],
+    3 => ["bebidas", "jugos"],
+    4 => ["pan", "pasteles", "tortas"],
+    5 => ["detergente", "lavaloza"]
 ];
 
 if (isset($update["message"])) {
     $chat_id = $update["message"]["chat"]["id"];
     $text = strtolower(trim($update["message"]["text"]));
     
-    $response = "❌ Producto no encontrado. Prueba con: leche, pan...";
+    $response = "❌ Producto no reconocido. Prueba con: leche, pan, carne...";
     
     foreach ($pasillos as $num => $productos) {
         if (in_array($text, $productos)) {
@@ -26,5 +27,5 @@ if (isset($update["message"])) {
     exit;
 }
 
-echo "SuperBot (@bottelaiep_bot) activo! ".date('Y-m-d H:i:s');
+echo "🤖 @bottelaiep_bot activo | ".date('Y-m-d H:i:s');
 ?>
